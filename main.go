@@ -12,16 +12,25 @@ import (
 	"github.com/chenall/gozk"
 )
 
+func newMachine(host string) *gozk.ZK {
+	return gozk.NewZK(
+		0,
+		host,
+		4370,
+		0,
+		"Asia/Saigon")
+}
+
 func main() {
-	zkSocket := gozk.NewZK(0, "192.168.0.202", 4370, 0, "Asia/Saigon")
-	if err := zkSocket.Connect(); err != nil {
+	machine := newMachine("192.168.1.204")
+	if err := machine.Connect(); err != nil {
 		panic(err)
 	}
 
 	c := make(chan *gozk.Attendance, 50)
 
 	// This function captures live attendance events and sends them to the channel.
-	if err := zkSocket.LiveCapture(func(event *gozk.Attendance) {
+	if err := machine.LiveCapture(func(event *gozk.Attendance) {
 		c <- event
 	}); err != nil {
 		panic(err)
@@ -30,11 +39,11 @@ func main() {
 	//  logs the attendance events as they arrive.
 	go func() {
 		for event := range c {
-			log.Println("event ", event)
+			log.Println("ATTENDANCE LOG DATA: ", event)
 		}
 	}()
 
-	gracefulQuit(zkSocket.StopCapture)
+	gracefulQuit(machine.StopCapture)
 }
 
 func gracefulQuit(f func()) {

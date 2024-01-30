@@ -1,5 +1,5 @@
 package main
-
+```
 import (
 	"log"
 	"os"
@@ -9,7 +9,9 @@ import (
 
 	gozk "github.com/0x19/gozk"
 )
+```
 
+```
 func main() {
 	// Initialize ZKTeco device
 	zkSocket := gozk.NewZK(0, "192.168.0.202", 4370, 0, "Asia/Saigon")
@@ -39,7 +41,9 @@ func main() {
 	// Handle graceful shutdown
 	gracefulQuit(zkSocket.StopCapture)
 }
+```
 
+```
 // Graceful shutdown function
 func gracefulQuit(f func()) {
 	// Create a channel for receiving signals
@@ -62,3 +66,4 @@ func gracefulQuit(f func()) {
 		time.Sleep(10 * time.Second)
 	}
 }
+```
